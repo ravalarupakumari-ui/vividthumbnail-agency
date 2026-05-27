@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
-// 🔮 CORE STYLING ENGINE: Shimmering Gradients & Card Pulsing Animations
+// 🔮 CORE STYLING ENGINE: Animations, Glass Effects, and Dynamic Backgrounds
 const styleEl = document.createElement('style');
 styleEl.innerHTML = `
   @keyframes gradientShift {
@@ -13,8 +13,12 @@ styleEl.innerHTML = `
     0%, 100% { filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.4)); }
     50% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.6)); }
   }
-  @keyframes alertSlide {
-    0% { transform: translateY(-30px); opacity: 0; }
+  @keyframes backgroundPan {
+    from { background-position: 0% 0%; }
+    to { background-position: 100% 100%; }
+  }
+  @keyframes cardSlide {
+    0% { transform: translateY(20px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
   .animate-gradient-shimmer {
@@ -24,8 +28,18 @@ styleEl.innerHTML = `
   .animate-title-glow {
     animation: pulseGlow 3s ease-in-out infinite;
   }
-  .animate-alert-entry {
-    animation: alertSlide 0.4s ease-out forwards;
+  .animate-background-panning {
+    animation: backgroundPan 30s linear infinite alternate;
+  }
+  .animate-card-slide {
+    animation: cardSlide 0.6s ease-out forwards;
+  }
+  
+  /* Modern Frosty Glass (Glassmorphism) effect class */
+  .glass-panel {
+    background: rgba(17, 19, 30, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
   }
 `;
 document.head.appendChild(styleEl);
@@ -53,9 +67,11 @@ function App() {
   const [alertCleared, setAlertCleared] = useState(false);
   const [countdown, setCountdown] = useState(3);
   
-  // Track focus states to make cards respond to user interaction/clicks
+  // Track focus states for input card interactivity
   const [focusField, setFocusField] = useState('');
 
+  // YOUR UPLOADED BACKGROUND IMAGE URL
+  const BG_IMAGE_URL = "https://raw.githubusercontent.com/ravalarupakumari-ui/youtube-thumbnail-generator/main/1000232157.jpg";
   const YOUR_WHATSAPP_NUMBER = "919848887073"; // Your Business Number
 
   useEffect(() => {
@@ -79,12 +95,21 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen text-white font-sans flex flex-col items-center justify-center p-4 bg-[#090a0f]">
+    <div className="min-h-screen text-white font-sans flex flex-col items-center justify-center p-4 relative overflow-hidden bg-black">
+      
+      {/* 🔮 CINEMATIC DYNAMIC BACKGROUND ENGINE */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center animate-background-panning opacity-50 blur-[2px]"
+        style={{ backgroundImage: `url(${BG_IMAGE_URL})` }}
+      >
+        {/* Dark Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
+      </div>
       
       {/* ⚠️ ANIMATED ONBOARDING MODAL OVERLAY */}
       {!alertCleared && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
-          <div className="bg-[#121420] border border-red-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-alert-entry">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-500 ease-out">
+          <div className="bg-[#121420] border border-red-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-card-slide">
             <h2 className="text-xl font-bold text-red-500 flex items-center gap-2 mb-4 animate-title-glow">
               ⚠️ CRITICAL ONBOARDING NOTICE
             </h2>
@@ -109,11 +134,13 @@ function App() {
         </div>
       )}
 
-      {/* 🔮 MAIN PREMIUM WORKSPACE PANEL */}
-      <div className="w-full max-w-lg relative">
-        <div className="absolute -bottom-2 -left-2 -right-2 h-[2px] bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 animate-gradient-shimmer rounded-full opacity-40"></div>
+      {/* 🔮 MAIN PREMIUM WORKSPACE PANEL (with Frosty Glass Effect) */}
+      <div className="w-full max-w-lg relative animate-card-slide">
         
-        <div className="relative bg-[#11131e] border border-gray-800 rounded-3xl p-6 shadow-2xl space-y-5">
+        {/* Animated Shimmer Neon Top line effect */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 animate-gradient-shimmer z-10"></div>
+        
+        <div className="relative glass-panel border border-gray-800/50 rounded-3xl p-6 shadow-2xl space-y-5 transition-all duration-300 hover:border-gray-700">
           
           {/* Studio Branding Header */}
           <div className="text-center mb-6">
@@ -134,7 +161,7 @@ function App() {
               onFocus={() => setFocusField('title')}
               onBlur={() => setFocusField('')}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-[#181b28] border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none text-white transition-all duration-300"
+              className="w-full bg-[#181b28]/80 border border-gray-800/50 rounded-xl px-4 py-3 text-sm focus:outline-none text-white transition-all duration-300"
             />
           </InputCard>
 
@@ -146,7 +173,7 @@ function App() {
               onFocus={() => setFocusField('vibe')}
               onBlur={() => setFocusField('')}
               onChange={(e) => setVibe(e.target.value)}
-              className="w-full bg-[#181b28] border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none text-white cursor-pointer appearance-none"
+              className="w-full bg-[#181b28]/80 border border-gray-800/50 rounded-xl px-4 py-3 text-sm focus:outline-none text-white cursor-pointer appearance-none"
             >
               <option>⚡ High-Saturation Gaming (Neon accents, intense glow)</option>
               <option>🎬 Dramatic Cinematic (Deep shadows, high-contrast HDR)</option>
@@ -164,13 +191,13 @@ function App() {
               onFocus={() => setFocusField('image')}
               onBlur={() => setFocusField('')}
               onChange={(e) => setImage(e.target.files[0])}
-              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-800 file:text-white cursor-pointer"
+              className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-800/80 file:text-white cursor-pointer"
             />
           </InputCard>
 
           {/* Dynamic Activation Frame */}
           {title && image ? (
-            <div className="pt-2 animate-alert-entry">
+            <div className="pt-2 animate-card-slide">
               <div className="bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 rounded-xl p-3 mb-4 leading-relaxed">
                 ⚡ <strong>AI can't beat human psychology.</strong> Your custom layout is being manually engineered for top-tier audience retention. Available in your chats inside 24 hours.
               </div>
@@ -182,7 +209,7 @@ function App() {
               </button>
             </div>
           ) : (
-            <div className="text-center text-xs text-gray-500 bg-[#141622] py-4 rounded-xl border border-dashed border-gray-800 mt-4">
+            <div className="text-center text-xs text-gray-500 bg-[#141622]/80 py-4 rounded-xl border border-dashed border-gray-800 mt-4 transition-all duration-300">
               Fill out all steps above to lock in your design slot.
             </div>
           )}
