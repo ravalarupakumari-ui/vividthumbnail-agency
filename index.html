@@ -1,13 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VividThumbnail Pro Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-[#090a0f]">
-    <div id="root"></div>
-    <script type="module" src="/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VividThumbnail Pro Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.4)); }
+      50% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.6)); }
+    }
+    @keyframes lightningPulse {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.05); }
+    }
+    @keyframes cardSlide {
+      0% { transform: translateY(20px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .animate-gradient-shimmer {
+      background-size: 200% 200%;
+      animation: gradientShift 4s ease infinite;
+    }
+    .animate-title-glow {
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+    .animate-lightning {
+      animation: lightningPulse 4s ease-in-out infinite;
+    }
+    .animate-card-slide {
+      animation: cardSlide 0.5s ease-out forwards;
+    }
+    .glass-panel {
+      background: rgba(10, 12, 22, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-white font-sans flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#05060b]">
+
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/20 blur-[130px] animate-lightning"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/20 blur-[130px] animate-lightning" style="animation-delay: 2s;"></div>
+    <div class="absolute top-[40%] right-[-5%] w-[40%] h-[40%] rounded-full bg-orange-600/10 blur-[100px] animate-lightning"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
+  </div>
+  
+  <div id="onboardingModal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+    <div class="bg-[#11131e] border border-red-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl animate-card-slide">
+      <h2 class="text-xl font-bold text-red-500 flex items-center gap-2 mb-4 animate-title-glow">
+        ⚠️ CRITICAL ONBOARDING NOTICE
+      </h2>
+      <ul class="space-y-3 text-sm text-gray-300 mb-6">
+        <li>• <strong>Personalized Attention:</strong> This is an elite editing portal, NOT a robotic AI generator.</li>
+        <li>• <strong>Asset Hand-Off:</strong> Tapping submit wraps your text data and opens WhatsApp automatically.</li>
+        <li>• <strong>The Final Step:</strong> You must click send in WhatsApp and attach your reference image manually!</li>
+      </ul>
+      <div id="countdownBox" class="w-full bg-gray-800 text-gray-400 font-semibold py-3 text-center rounded-xl text-sm border border-gray-700">
+        ⏳ Reviewing layout guidelines... (<span id="timerSec">3</span>s)
+      </div>
+      <button id="agreeBtn" class="hidden w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all duration-200 active:scale-95">
+        ✅ OK, I UNDERSTAND THE WORKFLOW
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full max-w-lg relative animate-card-slide z-10">
+    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 via-orange-500 to-cyan-500 animate-gradient-shimmer rounded-t-3xl"></div>
+    
+    <div class="relative glass-panel border border-gray-800/60 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div class="text-center mb-6">
+        <h1 class="text-3xl font-black tracking-tight bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-title-glow">
+          🔥 VIVIDTHUMBNAIL PRO
+        </h1>
+        <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400 mt-1">Manual Masterclass Studio</p>
+        <p class="text-sm text-gray-400 mt-2">Skip basic templates. Get a high-CTR thumbnail built by an elite editor.</p>
+      </div>
+
+      <div id="card1" class="p-[1px] rounded-2xl transition-all duration-300 bg-gray-800/60 shadow-xl">
+        <div class="bg-[#0f111a] rounded-[15px] p-5">
+          <label class="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">1. Video Title</label>
+          <input id="videoTitle" type="text" placeholder="e.g., Clash Squad Grandmaster Push! 👑" class="w-full bg-[#161824] border border-gray-800/80 rounded-xl px-4 py-3 text-sm focus:outline-none text-white transition-all duration-300">
+        </div>
+      </div>
+
+      <div id="card2" class="p-[1px] rounded-2xl transition-all duration-300 bg-gradient-to-r from-red-500 via-orange-500 to-cyan-500 animate-gradient-shimmer shadow-xl">
+        <div class="bg-[#0f111a] rounded-[15px] p-5">
+          <label class="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">2. Visual Theme</label>
+          <select id="visualTheme" class="w-full bg-[#161824] border border-gray-800/80 rounded-xl px-4 py-3 text-sm focus:outline-none text-white cursor-pointer appearance-none">
+            <option>⚡ High-Saturation Gaming (Neon accents, intense glow)</option>
+            <option>🎬 Dramatic Cinematic (Deep shadows, high-contrast HDR)</option>
+            <option>📈 Premium Infotainment (Bold text, clean layout)</option>
+            <option>🔥 Extreme Clickbait (Aggressive depth, glowing outlines)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="card3" class="p-[1px] rounded-2xl transition-all duration-300 bg-gray-800/60 shadow-xl">
+        <div class="bg-[#0f111a] rounded-[15px] p-5">
+          <label class="block text-xs font-bold uppercase text-gray-400 tracking-wider mb-2">3. Reference Image</label>
+          <input id="refImage" type="file" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-800 file:text-white cursor-pointer">
+        </div>
+      </div>
+
+      <div id="submitArea" class="hidden pt-2 animate-card-slide">
+        <div class="bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-400 rounded-xl p-3 mb-4 leading-relaxed">
+          ⚡ <strong>AI can't beat human psychology.</strong> Your custom layout is being manually engineered for top-tier audience retention. Available in your chats inside 24 hours.
+        </div>
+        <button id="submitBtn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 animate-gradient-shimmer text-white font-bold py-4 rounded-2xl shadow-xl shadow-emerald-500/20 transition-all duration-300 transform hover:scale-[1.02]">
+          💬 SUBMIT ORDER VIA WHATSAPP
+        </button>
+      </div>
+      
+      <div id="placeholderArea" class="text-center text-xs text-gray-500 bg-[#121420]/50 py-4 rounded-xl border border-dashed border-gray-800/80 mt-4">
+        Fill out all steps above to lock in your design slot.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Onboarding Timer Logic
+    let count = 3;
+    const timerInterval = setInterval(() => {
+      count--;
+      document.getElementById('timerSec').innerText = count;
+      if (count <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('countdownBox').classList.add('hidden');
+        document.getElementById('agreeBtn').classList.remove('hidden');
+      }
+    }, 1000);
+
+    document.getElementById('agreeBtn').onclick = () => {
+      document.getElementById('onboardingModal').classList.add('hidden');
+    };
+
+    // Card Focus & Validation Logic
+    const titleInp = document.getElementById('videoTitle');
+    const themeSel = document.getElementById('visualTheme');
+    const imageInp = document.getElementById('refImage');
+
+    function checkForm() {
+      const hasTitle = titleInp.value.trim() !== '';
+      const hasImg = imageInp.files.length > 0;
+
+      // Card 1 state
+      if (hasTitle) {
+        document.getElementById('card1').className = "p-[1px] rounded-2xl transition-all duration-300 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 animate-gradient-shimmer shadow-xl";
+      } else {
+        document.getElementById('card1').className = "p-[1px] rounded-2xl transition-all duration-300 bg-gray-800/60 shadow-xl";
+      }
+
+      // Card 3 state
+      if (hasImg) {
+        document.getElementById('card3').className = "p-[1px] rounded-2xl transition-all duration-300 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 animate-gradient-shimmer shadow-xl";
+      } else {
+        document.getElementById('card3').className = "p-[1px] rounded-2xl transition-all duration-300 bg-gray-800/60 shadow-xl";
+      }
+
+      if (hasTitle && hasImg) {
+        document.getElementById('submitArea').classList.remove('hidden');
+        document.getElementById('placeholderArea').classList.add('hidden');
+      } else {
+        document.getElementById('submitArea').classList.add('hidden');
+        document.getElementById('placeholderArea').classList.remove('hidden');
+      }
+    }
+
+    titleInp.oninput = checkForm;
+    imageInp.onchange = checkForm;
+
+    // Redirection Logic
+    document.getElementById('submitBtn').onclick = () => {
+      const title = titleInp.value;
+      const vibe = themeSel.value;
+      const text = `👋 Hello VividThumbnail Studio! I want to order a premium thumbnail.\n\n📝 VIDEO DETAILS:\n• Title: ${title}\n• Vibe/Style: ${vibe}\n\n🖼️ REMINDER: Sending my reference image right below this text!`;
+      
+      window.location.href = `whatsapp://send?phone=919848887073&text=${encodeURIComponent(text)}`;
+      setTimeout(() => {
+        window.open(`https://wa.me/919848887073?text=${encodeURIComponent(text)}`, '_blank');
+      }, 800);
+    };
+  </script>
+</body>
 </html>
